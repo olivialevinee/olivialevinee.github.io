@@ -11,7 +11,7 @@ let countX = 20;
 let countY = 20;
 
 function setup() {
-  createCanvas(1024, 1024);
+  createCanvas(windowWidth, windowHeight);
   noLoop(); // pattern is static, no need to redraw every frame
 }
 
@@ -59,4 +59,10 @@ function keyPressed() {
   if (key == 'S' || key == 's') {
     saveCanvas("assignment[3]_pattern_Levine_Olivia.png");
   }
+}
+
+// redraw the pattern whenever the window is resized so it always fills the screen
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  redraw();
 }
