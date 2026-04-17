@@ -1,83 +1,120 @@
 /*
-ARTG 2262 – Prototyping with Code
-Olivia Levine
-levine.ol@northeastern.edu
-Assignment 5: Screensaver
-"Drifting Galaxy"
-Description: An  animated galaxy scene with shimmering stars and mesh, partially transparent circles in the background that overlap to make a galaxy feel. They slowly pulse and shift hues over time. Each run creates a different color palette and star layout.
+  ARTG 2262 – Prototyping with Code
+  Olivia Levine
+  levine.ol@northeastern.edu
+  Assignment 5: Screensaver
+  "Drifting Galaxy"
+  Description: An animated galaxy scene with shimmering stars and large, partially
+  transparent clouds in the background that slowly pulse and shift hues over time.
+  Each run creates a different star layout. Current time displayed in the corner.
 */
 
-//set variables
 let numStars = 300;
+let stars = []; // array of Star objects (hacker: collection of objects managed as array)
 
-// arrays - 4 empty "backpacks" for x position, y position, size, and when they twinkle (offset)
-let starX = [];
-let starY = [];
-let starSize = [];
-let starOffset = []; // each star's own twinkle timing
+// HACKER: Star class bundles each star's properties and draw behavior together
+class Star {
+  constructor() {
+    this.x = random(width);      // random position across the canvas
+    this.y = random(height);
+    this.size = random(2, 8);    // random diameter between 2 and 8 pixels
+    this.offset = random(360);   // random starting phase so stars twinkle at different times
+  }
+
+  draw() {
+    // sin() smoothly oscillates between -1 and 1 each cycle
+    // frameCount * 0.05 controls the speed, this.offset staggers each star
+    // map() stretches the -1 to 1 range into useful brightness/size values
+    let alpha = map(sin(frameCount * 0.05 + this.offset), -1, 1, 10, 100);
+    let glow  = map(sin(frameCount * 0.05 + this.offset), -1, 1, this.size, this.size * 3);
+
+    // soft outer glow ring at 30% opacity
+    fill(210, 20, 100, alpha * 0.3);
+    ellipse(this.x, this.y, glow);
+
+    // bright solid core
+    fill(200, 10, 100, alpha);
+    ellipse(this.x, this.y, this.size);
+  }
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // color mode: (HSB, hue, saturation, brightness, opacity)
-  colorMode(HSB, 360, 100, 100, 100);
+  colorMode(HSB, 360, 100, 100, 100); // hue, saturation, brightness, opacity all 0-100 (except hue, 0-360)
   noStroke();
 
-//arrays contain random valyes for each star
+  // populate the stars array with Star objects
   for (let i = 0; i < numStars; i++) {
-    starX.push(random(width));
-    starY.push(random(height));
-    starSize.push(random(2, 8));
-    starOffset.push(random(360)); // random starting point in twinkle cycle
+    stars.push(new Star());
   }
 }
 
 function draw() {
   background(240, 60, 6); // deep dark navy
-
   drawClouds();
   drawStars();
+  drawClock(); // HACKER: display current time
 }
-//background ellipses (clouds)
 
 function drawClouds() {
-  // do forloop tells the code to do the next part 8 times, one for each "cloud"
   for (let i = 0; i < 8; i++) {
-  // frameCount goes up by 1 every frame and we multiply it by a really small number (0.05) to make the color slowly drift over time - once it hits 360 (full roation) it starts over again
+    // hue slowly drifts as frameCount increases, offset per cloud by i * 25
+    // % 360 wraps it back around when it completes a full hue rotation
     let h = (200 + i * 25 + frameCount * 0.05) % 360;
-  // each cloud sits at a different spot across the canvas
+
+    // spread 8 clouds evenly across the width
     let x = width * (i / 7);
-  // puts each cloud at a slightly different height - sin helps make a wavy pattern of them
+
+    // sin() makes a gentle wave so clouds sit at different heights
     let y = height * 0.5 + height * 0.3 * sin(i * 45);
 
-// Draw 4 layers per cloud, each bigger and more transparent
+    // draw 4 ellipse layers per cloud, each bigger and more transparent
     for (let layer = 4; layer > 0; layer--) {
-      fill(h, 55, 65, layer * 5);
+      fill(h, 55, 65, layer * 5); // layer * 5 means inner layers are slightly more opaque
       ellipse(x, y, width * 0.6 * layer * 0.4, height * 0.7 * layer * 0.4);
     }
   }
 }
 
-//stars
-//sin() to smoothly flash between dim and bright
 function drawStars() {
-  for (let i = 0; i < numStars; i++) {
-//figure out how bright the star is right now (frameCount * 0.05)
-// starOffset looks at what point the star is at in its cycle
-// sin() returns -1 to 1
-// map() stretches that into a brightness range
-    let alpha = map(sin(frameCount * 0.05 + starOffset[i]), -1, 1, 10, 100);
-    let glow  = map(sin(frameCount * 0.05 + starOffset[i]), -1, 1, starSize[i], starSize[i] * 3);
-
-// Soft outer glow on each star
-    fill(210, 20, 100, alpha * 0.3);
-    ellipse(starX[i], starY[i], glow);
-
-// Bright core
-    fill(200, 10, 100, alpha);
-    ellipse(starX[i], starY[i], starSize[i]);
+  // call draw() on each Star object in the array
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].draw();
   }
 }
-//fullscreen on click
+
+// HACKER: current time using p5's built-in time functions
+function drawClock() {
+  // hour(), minute(), and second() return the time as integers
+  // nf() pads single digits with a leading zero (e.g. 9 becomes "09")
+  // convert 24-hour to 12-hour: % 12 wraps it, || 12 handles midnight/noon showing 12 not 00
+  let rawHour = hour() % 12 || 12;
+  let h = nf(rawHour, 2);
+  let m = nf(minute(), 2);
+  let s = nf(second(), 2);
+  let ampm = hour() < 12 ? "AM" : "PM"; // before noon is AM, noon and after is PM
+
+  // position in bottom right corner, scaled to canvas size
+  let x = width - width * 0.12;
+  let y = height - height * 0.04;
+
+  textSize(width * 0.02); // scales with canvas so it looks right at any resolution
+  textAlign(RIGHT);
+
+  fill(200, 20, 100, 80);
+  text(h + ":" + m + ":" + s + " " + ampm, x, y);
+}
+
+// resize canvas and reinitialize stars so they fill the new dimensions
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  stars = []; // clear old stars whose positions were based on the old canvas size
+  for (let i = 0; i < numStars; i++) {
+    stars.push(new Star()); // create fresh stars using the new width/height
+  }
+}
+
+// click to go fullscreen
 function mousePressed() {
   fullscreen(true);
 }
