@@ -1,41 +1,62 @@
 /*
-Prototyping with Code
-Olivia Levine
-levine.ol@northeastern.edu
-Assignment 4
-"Electric Shapes"
+  ARTG-2262: Prototyping with Code
+  Olivia Levine
+  levine.ol@northeastern.edu
+  Assignment 4
+  "Electric Shapes"
 */
+
+// countX and countY define how many columns and rows the grid has (mega-hacker: programmatic generation)
+let countX = 20;
+let countY = 20;
+
 function setup() {
   createCanvas(1024, 1024);
+  noLoop(); // pattern is static, no need to redraw every frame
 }
 
-let gridSize = 50
 function draw() {
   background('skyblue');
 
-  // for (start at left edge; keep going till you reach right side of canvas; each time, jump forward by "gridSize" # of pixels)
-  for(let x = 0; x < width; x += gridSize)
-    //same thing for y axis in nexted loop - start at top, keep going till bottom, each time, jump forward by "gridsize" # pixels)
-  {for(let y = 0; y < height; y += gridSize) 
-  // draw a rectangle at the start of each grid (jumps forward each time) with and height of grid
-    // (remainder of (column # + row #)/2), if = 0...
-  { if ((x/gridSize + y/gridSize) % 2 ==0){
-    // grid starts (top left) at x,y
-    //so, x + gridSize adds the width and = top right, y + gridSize adds the height (going down) and = bottom left, and x + gridSize, y + gridSize = bottom right
-    //triangle (bottom left, middle of top, bottom right)
-    fill("magenta");
-    noStroke();
-    triangle(x,y + gridSize, x + gridSize/2, y, x + gridSize, y +  gridSize)
-  }else{
-    fill(170,0,255);
-    stroke('magenta');
-    strokeWeight(3);
-    rect(x,y,gridSize,gridSize)}
+  // cell size is derived from canvas dimensions and count variables
+  // so if you change countX/countY or the canvas size, the whole grid adapts automatically
+  let cellW = width / countX;   // width of each grid cell
+  let cellH = height / countY;  // height of each grid cell
+
+  // outer loop steps through each column
+  for (let i = 0; i < countX; i++) {
+    // inner loop steps through each row
+    for (let j = 0; j < countY; j++) {
+
+      // convert grid index to pixel position
+      let x = i * cellW;
+      let y = j * cellH;
+
+      // checkerboard condition: if column + row index is even, draw triangle; otherwise draw rect
+      if ((i + j) % 2 == 0) {
+        fill("magenta");
+        noStroke();
+        // triangle points: bottom-left, top-middle, bottom-right of the cell
+        triangle(x, y + cellH, x + cellW / 2, y, x + cellW, y + cellH);
+      } else {
+        fill(170, 0, 255);
+        stroke('magenta');
+        strokeWeight(3);
+        // rect fills the whole cell
+        rect(x, y, cellW, cellH);
+      }
+    }
   }
 }
-}
+
 function mousePressed() {
-console.log("X:" + mouseX + ", Y:" + mouseY);
+  // logs mouse position to console for debugging
+  console.log("X:" + mouseX + ", Y:" + mouseY);
 }
-function keyPressed() {  
-    if (key == 'S' || key == 's') {       saveCanvas("assignment[3]_pattern_Levine_Olivia.png"); } } 
+
+function keyPressed() {
+  // press S to save the canvas as a PNG
+  if (key == 'S' || key == 's') {
+    saveCanvas("assignment[3]_pattern_Levine_Olivia.png");
+  }
+}
