@@ -1,33 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olivia Levine | ARTG 2262</title>
+    <meta charset="utf-8" />
+    <title>Olivia Levine – ARTG2262</title>
     <style>
       body {
-        background-color: black;
-        color: #cc00ff;
-        font-family: Arial, sans-serif;
-        max-width: 800px;
-        margin: 60px auto;
-        padding: 0 24px;
+        font-family: sans-serif;
+        background: #0a0f28;
+        color: white;
+        margin: 0;
+        padding: 40px;
       }
-      a { color: #cc00ff; }
-      ul { padding-left: 24px; }
-      li { margin-bottom: 12px; font-size: 18px; }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+      }
+      p {
+        color: #aaa;
+        margin-bottom: 40px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        background: #141a3a;
+        border-radius: 10px;
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+        transition: transform 0.2s;
+      }
+      .card:hover {
+        transform: scale(1.03);
+      }
+      .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        display: block;
+      }
+      .card-label {
+        padding: 14px 16px;
+      }
+      .card-label span {
+        display: block;
+        font-size: 0.75rem;
+        color: #888;
+        margin-bottom: 4px;
+      }
+      .card-label strong {
+        font-size: 1rem;
+      }
     </style>
   </head>
   <body>
-    <h1>Welcome to my homework website!</h1>
-    <h2>Take a look at the work I've done thus far in the semester.</h2>
-    <ul>
-      <li><a href="https://studio.code.org/c/2767279490" target="_blank">Assignment[1] = Frozen</a></li>
-      <li><a href="assignment-2/index.html">Assignment[2] = You've Lived.... Interactive Calculator</a></li>
-      <li><a href="assignment-3/index.html">Assignment[3] = Olivia's Self Portrait</a></li>
-      <li><a href="assignment-4/index.html">Assignment[4] = Electric Shapes</a></li>
-      <li><a href="assignment-5/index.html">Assignment[5] = Drifting Galaxy</a></li>
-      <li><a href="assignment-6/index.html">Assignment[6] = Galaxy Drawing App</a></li>
-    </ul>
+    <h1>Olivia Levine</h1>
+    <p>ARTG-2262: Prototyping with Code</p>
+
+    <div class="grid">
+
+      <a class="card" href="assignment-1/">
+        <img src="thumbnail1.png" alt="Assignment 1" />
+        <div class="card-label">
+          <span>Assignment 1</span>
+          <strong>Hour of Code</strong>
+        </div>
+      </a>
+
+      <a class="card" href="assignment-2/">
+        <img src="thumbnail2.png" alt="Assignment 2" />
+        <div class="card-label">
+          <span>Assignment 2</span>
+          <strong>Calculator Conversations</strong>
+        </div>
+      </a>
+
+      <a class="card" href="assignment-3/">
+        <img src="thumbnail3.png" alt="Assignment 3" />
+        <div class="card-label">
+          <span>Assignment 3</span>
+          <strong>Olivia Levine in Java</strong>
+        </div>
+      </a>
+
+      <a class="card" href="assignment-4/">
+        <img src="thumbnail4.png" alt="Assignment 4" />
+        <div class="card-label">
+          <span>Assignment 4</span>
+          <strong>Electric Shapes</strong>
+        </div>
+      </a>
+
+      <a class="card" href="assignment-5/">
+        <img src="thumbnail5.png" alt="Assignment 5" />
+        <div class="card-label">
+          <span>Assignment 5</span>
+          <strong>Drifting Galaxy</strong>
+        </div>
+      </a>
+
+      <a class="card" href="assignment-6/">
+        <img src="thumbnail6.png" alt="Assignment 6" />
+        <div class="card-label">
+          <span>Assignment 6</span>
+          <strong>Galaxy Drawing App</strong>
+        </div>
+      </a>
+
+    </div>
   </body>
 </html>
